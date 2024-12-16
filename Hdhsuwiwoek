@@ -1,0 +1,120 @@
+local gameTitle = "[UGC]PETAPETA｜Level5" -- Updated game title
+local tab1Name = "Main"
+
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/wizard"))()
+local Window = Library:NewWindow(gameTitle) -- Renamed variable for clarity
+local MainTab = Window:NewSection(tab1Name)
+
+-- Highlight function
+local function addHighlightWithDelay(model)
+    task.wait(0.5)
+    local highlight = Instance.new("Highlight")
+    highlight.FillColor = Color3.fromRGB(128, 0, 128) -- Custom fill color
+    highlight.Parent = model
+
+    -- Spawn notification
+    local player = game.Players.LocalPlayer
+    local screenGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+    local textLabel = Instance.new("TextLabel", screenGui)
+    textLabel.Text = "PETAPETA spawned"
+    textLabel.TextColor3 = Color3.new(1, 1, 1) -- White
+    textLabel.BackgroundTransparency = 1
+    textLabel.Size = UDim2.new(0.3, 0, 0.1, 0)
+    textLabel.Position = UDim2.new(0.35, 0, 0.9, 0)
+    textLabel.Font = Enum.Font.SourceSans
+    textLabel.TextScaled = true
+
+    -- Fade out and destroy
+    task.wait(5)
+    local tweenService = game:GetService("TweenService")
+    local tween = tweenService:Create(textLabel, TweenInfo.new(2), {TextTransparency = 1})
+    tween:Play()
+    tween.Completed:Connect(function()
+        screenGui:Destroy()
+    end)
+end
+
+-- Function to monitor and add highlights
+local function monitorEnemies()
+    local clientFolder = game.Workspace:FindFirstChild("Client")
+    if not clientFolder then return end
+
+    local enemyFolder = clientFolder:FindFirstChild("Enemy")
+    if not enemyFolder then return end
+
+    local function handleEnemyModel(model)
+        if model:IsA("Model") and model.Name == "EnemyModel" then
+            addHighlightWithDelay(model)
+        end
+    end
+
+    enemyFolder.ChildAdded:Connect(function(part)
+        if part:IsA("Part") and part.Name == "ClientEnemy" then
+            part.ChildAdded:Connect(handleEnemyModel)
+            if part:FindFirstChild("EnemyModel") then
+                handleEnemyModel(part:FindFirstChild("EnemyModel"))
+            end
+        end
+    end)
+end
+
+-- Script Execution Notification
+local function displayScriptExecutedNotification()
+    local player = game.Players.LocalPlayer
+    local screenGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+    local textLabel = Instance.new("TextLabel", screenGui)
+    textLabel.Text = "Script executed!"
+    textLabel.TextColor3 = Color3.new(1, 1, 1)
+    textLabel.BackgroundTransparency = 1
+    textLabel.Size = UDim2.new(0.3, 0, 0.1, 0)
+    textLabel.Position = UDim2.new(0.35, 0, 0.9, 0)
+    textLabel.Font = Enum.Font.SourceSans
+    textLabel.TextScaled = true
+
+    -- Play sound
+    local sound = Instance.new("Sound", screenGui)
+    sound.SoundId = "rbxassetid://9064294662"
+    sound:Play()
+
+    -- Fade out and destroy
+    task.wait(5)
+    local tweenService = game:GetService("TweenService")
+    local tween = tweenService:Create(textLabel, TweenInfo.new(2), {TextTransparency = 1})
+    tween:Play()
+    tween.Completed:Connect(function()
+        screenGui:Destroy()
+    end)
+end
+
+-- Button to start ESP and Notifications
+MainTab:CreateButton("Notify/Esp Peta", function()
+    monitorEnemies()
+    displayScriptExecutedNotification()
+end)
+
+-- Discord server link button
+MainTab:CreateButton("Join Discord Server", function()
+    setclipboard("https://discord.gg/ZGQUs9Cc")
+    local player = game.Players.LocalPlayer
+    local screenGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+    local textLabel = Instance.new("TextLabel", screenGui)
+    textLabel.Text = "Discord link copied to clipboard!"
+    textLabel.TextColor3 = Color3.new(0, 1, 0) -- Green
+    textLabel.BackgroundTransparency = 1
+    textLabel.Size = UDim2.new(0.3, 0, 0.1, 0)
+    textLabel.Position = UDim2.new(0.35, 0, 0.9, 0)
+    textLabel.Font = Enum.Font.SourceSans
+    textLabel.TextScaled = true
+
+    -- Fade out and destroy
+    task.wait(5)
+    local tweenService = game:GetService("TweenService")
+    local tween = tweenService:Create(textLabel, TweenInfo.new(2), {TextTransparency = 1})
+    tween:Play()
+    tween.Completed:Connect(function()
+        screenGui:Destroy()
+    end)
+end)
+
+-- Additional Tabs (Placeholder)
+local Tab2 = Window:NewSection("Raizen")
